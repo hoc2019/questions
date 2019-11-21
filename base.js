@@ -103,6 +103,13 @@
 		主要用于发送表单数据,但也可以独立使用于传输键控数据。
 		与普通的Ajax相比，它能异步上传二进制文件
 
+	Q.XMLHttpRequest实例中的onreadystatechange和onload，onerror，abort等都可以判断请求状态 那他们有什么区别
+		如果需要对更细致的每一步都做处理的话 则使用onreadystatechange
+		一般用onload，onerror，abort等即可
+
+	Q.图片水印和图片普通压缩实现原理的简单介绍
+		图片水印：根据图片路径（如果是本地上传图片需要用到FileReader）canvas绘制图片 再绘制字体 绘制完成后canvas输出图片即可
+		图片压缩：根据图片路径（如果是本地上传图片需要用到FileReader）canvas绘制图片 设置临界宽高 超过此宽高的图片 canvas绘制图片时设置宽高为临界宽高 绘制完成后canvas输出图片即可
 	Q.跨域相关及有哪些方法可以
 		同源策略：只有当协议，域名，端口相同的时候才算是同一个域名，否则均认为需要做跨域的处理
 		跨全域：
@@ -276,7 +283,7 @@
 
 		双精度浮点数的小数部分最多支持 52 位，所以两者相加之后得到这么一串0.0100110011001100110011001100110011001100110011001100，因浮点数小数位的限制而截断的二进制数字，这时候，再将二进制转换为十进制，就成了 0.30000000000000004。
 
-	Q.this的指向问题 如何解决
+	Q.this的指向问题 如何解决 为何getId方法不能用箭头函数
 		let obj = { id: 1, getId: function(){ console.info(this.id) } };
 		let id1= obj.getId();			//1
 		let getId2 = obj.getId;
@@ -289,15 +296,17 @@
 			let getId2 = obj.getId;
 			getId2.call(obj);
 
+		剩下是箭头函数相关概念
+
 	Q.上述问题的进阶版反向问题 如何实现call/apply函数
 
 		/*
 		 * 思路
-		 * 上述问题是因为this丢失 需要绑定obj
-		 * 现在反向思考 将函数放置于obj参数环境下 变成obj中的一个方法再去执行
+		 * 上述问题是因为将方法体拎出obj而导致this丢失 需要重新绑定obj保证执行环境实在obj下
+		 * 而call apply则是反向思考 将独立的一个函数放置于obj环境下 变成obj中的一个方法再去执行
 		 * 为了防止新建的变量名和对象中原有的变量名冲突 这里用到了Symbol
+		 * 以下是简单的实现方法
 		 */
-
 		Function.prototype.call = function(ctx, ...args){
 			let caller = undefined;
 			let res = undefined;
@@ -310,8 +319,7 @@
 			}catch(e){}
 			return res;
 		}
-
-		Function.prototype.bind = function(ctx, args){
+		Function.prototype.apply = function(ctx, args){
 			let caller = undefined;
 			let res = undefined;
 			try{
