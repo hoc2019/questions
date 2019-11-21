@@ -169,6 +169,10 @@
 		2.当访问对象的属性或是方法的时候，不仅仅会在原对象上查找，还会顺着原型链在原型对象的原型链上查找，直到查到null(所有原型链的顶层)为止。
 		3.原型是JavaScript实现继承的基础，new关键字做的主要的事情就是将实例对象的__proto__属性指向原型对象的prototype。
 
+	Q.原型中的in和hasOwnProperty的区别
+		hasOwnProperty：可以检测一个属性是存在于实例中，还是原型中。返回布尔值，只有当属性存在于实例中的时候才会返回true;
+		in：无论在实例中或者原型中 只要有 就返回true（两种用法 for-in 和 'id' in object）
+
 	Q.任务队列简单相关 打印顺序是什么 为什么
 		setTimeout(function(){
 			console.log('hello');
@@ -301,7 +305,7 @@
 
 	Q.上述问题的进阶版反向问题 如何实现call/apply函数
 
-		/*
+		/**
 		 * 思路
 		 * 上述问题是因为将方法体拎出obj而导致this丢失 需要重新绑定obj保证执行环境实在obj下
 		 * 而call apply则是反向思考 将独立的一个函数放置于obj环境下 变成obj中的一个方法再去执行
